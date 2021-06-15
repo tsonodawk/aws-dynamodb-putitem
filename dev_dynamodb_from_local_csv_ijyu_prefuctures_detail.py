@@ -9,9 +9,9 @@ session = Session(profile_name=profile)
 # dynamodb = boto3.resource('dynamodb')
 dynamodb = session.resource('dynamodb')
 
-# tableName = "DevIjyuRegions"
-tableName = "TestIjyuRegionsTable"
-csv_file_path = "./data/dev_ijyu_region.csv"
+tableName = "DevIjyuPrefucturesDetail"
+# tableName = "TestIjyuPrefucturesTable"
+csv_file_path = "./data/dev_ijyu_prefuctures_detail.csv"
 
 
 def lambda_handler():
@@ -22,9 +22,8 @@ def lambda_handler():
     with open(csv_file_path, "r", encoding="utf-8", errors="", newline="") as f:
         # DictReader is a generator; not stored in memory
         for row in csv.DictReader(f):
-            # 数値項目を文字列から数値に変換する
-            row["regionCode"] = int(row["regionCode"])
-            row["dispNum"] = int(row["dispNum"])
+            row["prefCode"] = int(row["prefCode"])
+            row["refPrefCode"] = int(row["refPrefCode"])
             if len(batch) >= batch_size:
                 write_to_dynamo(batch)
                 batch.clear()
@@ -46,14 +45,17 @@ def write_to_dynamo(rows):
     except:
         print("Error loading DynamoDB table. Check if table was created correctly and environment variable.")
 
+    data_row = ""
     try:
         with table.batch_writer() as batch:
             for i in range(len(rows)):
+                data_row = rows[i]
                 # print("put_item")
                 batch.put_item(
                     Item=rows[i]
                 )
     except:
+        print(data_row)
         print("Error executing batch_writer")
 
 

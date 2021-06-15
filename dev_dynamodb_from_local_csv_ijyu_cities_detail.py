@@ -9,9 +9,8 @@ session = Session(profile_name=profile)
 # dynamodb = boto3.resource('dynamodb')
 dynamodb = session.resource('dynamodb')
 
-# tableName = "DevIjyuRegions"
-tableName = "TestIjyuRegionsTable"
-csv_file_path = "./data/dev_ijyu_region.csv"
+tableName = "DevIjyuCitiesDetail"
+csv_file_path = "data/dev_ijyu_cities_detail.csv"
 
 
 def lambda_handler():
@@ -22,9 +21,6 @@ def lambda_handler():
     with open(csv_file_path, "r", encoding="utf-8", errors="", newline="") as f:
         # DictReader is a generator; not stored in memory
         for row in csv.DictReader(f):
-            # 数値項目を文字列から数値に変換する
-            row["regionCode"] = int(row["regionCode"])
-            row["dispNum"] = int(row["dispNum"])
             if len(batch) >= batch_size:
                 write_to_dynamo(batch)
                 batch.clear()

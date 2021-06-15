@@ -10,6 +10,7 @@ session = Session(profile_name=profile)
 dynamodb = session.resource('dynamodb')
 
 tableName = "DevIjyuPrefuctures"
+# tableName = "TestIjyuPrefucturesTable"
 csv_file_path = "./data/dev_ijyu_prefuctures.csv"
 
 
@@ -24,6 +25,7 @@ def lambda_handler():
             row["prefCode"] = int(row["prefCode"])
             row["dispNum"] = int(row["dispNum"])
             row["regionDispNum"] = int(row["regionDispNum"])
+            row["refRegionCode"] = int(row["refRegionCode"])
             if len(batch) >= batch_size:
                 write_to_dynamo(batch)
                 batch.clear()

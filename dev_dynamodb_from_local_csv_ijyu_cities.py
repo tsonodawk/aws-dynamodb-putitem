@@ -23,6 +23,7 @@ def lambda_handler():
         for row in csv.DictReader(f):
             row["prefCode"] = int(row["prefCode"])
             row["prefDispNum"] = int(row["prefDispNum"])
+            row["refPrefCode"] = int(row["refPrefCode"])
             if len(batch) >= batch_size:
                 write_to_dynamo(batch)
                 batch.clear()
